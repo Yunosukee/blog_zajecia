@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Płatność potwierdzona{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow-sm border-success">
+            <div class="card-header bg-success text-white text-center py-4">
+                <h2 class="mb-0">✓ Płatność potwierdzona!</h2>
+            </div>
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle" style="font-size: 5rem; color: #28a745;"></i>
+                </div>
+
+                <h4 class="mb-4">Dziękujemy za zakupy!</h4>
+                
+                <div class="alert alert-success mb-4" role="alert">
+                    <p class="mb-2">Twoje zamówienie zostało pomyślnie opłacone.</p>
+                    <p class="mb-0">Produkty zostały zmniejszone ze stanu magazynowego.</p>
+                </div>
+
+                <!-- Detale Zamówienia -->
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">📋 Numer zamówienia</h5>
+                        <p class="fs-4 text-primary">
+                            <strong>{{ order.order_number }}</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Produkty -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">📦 Produkty w zamówieniu</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                {% for product_id, item in order.products.items %}
+                                <tr>
+                                    <td>{{ item.name }}</td>
+                                    <td class="text-end">{{ item.quantity }} szt. × {{ item.price }} zł</td>
+                                    <td class="text-end"><strong>{{ item.quantity|add:0 }} × {{ item.price }} zł</strong></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Podsumowanie Ceny -->
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-8">Subtotal:</div>
+                            <div class="col-4 text-end">{{ order.total_price }} zł</div>
+                        </div>
+                        
+                        {% if order.discount_amount > 0 %}
+                        <div class="row mb-3 text-success">
+                            <div class="col-8"><strong>Rabat:</strong></div>
+                            <div class="col-4 text-end"><strong>- {{ order.discount_amount }} zł</strong></div>
+                        </div>
+                        {% if order.discount_code %}
+                        <small class="text-muted">Kod: <code>{{ order.discount_code.code }}</code></small>
+                        {% endif %}
+                        {% endif %}
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-8">
+                                <h5 class="mb-0">Do zapłaty:</h5>
+                            </div>
+                            <div class="col-4 text-end">
+                                <h4 class="text-success mb-0">{{ order.final_price }} zł</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kod BLIK -->
+                <div class="alert alert-info" role="alert">
+                    <strong>🔐 Kod BLIK:</strong> {{ order.blik_code }}
+                </div>
+
+                <!-- Daty -->
+                <div class="text-muted small mb-4">
+                    <p class="mb-1"><strong>Data zamówienia:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+                    <p class="mb-0"><strong>Data płatności:</strong> {{ order.paid_at|date:"d.m.Y H:i" }}</p>
+                </div>
+
+                <!-- Akcje -->
+                <div class="d-grid gap-2">
+                    <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">
+                        ← Wróć do sklepu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informacja -->
+        <div class="alert alert-info mt-4" role="alert">
+            <h5 class="alert-heading">ℹ️ Co dalej?</h5>
+            <p class="mb-2">• Twoje zamówienie zostało zarejestrowane w systemie</p>
+            <p class="mb-2">• Produkty zostały zmniejszone ze stanu magazynowego</p>
+            <p class="mb-0">• Możesz kontynuować zakupy!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

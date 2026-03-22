@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Finalizacja zamówienia{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">📋 Podsumowanie zamówienia</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Produkt</th>
+                            <th>Ilość</th>
+                            <th>Cena</th>
+                            <th>Razem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }} szt.</td>
+                            <td>{{ item.product.price }} zł</td>
+                            <td><strong>{{ item.item_total }} zł</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Płatność BLIK -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">💳 Płatność BLIK</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'process_payment' %}">
+                    {% csrf_token %}
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>📱 Instrukcja:</strong> Wpisz 6-cyfrowy kod BLIK z aplikacji mobilnej Twojego banku
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label"><strong>Kod BLIK (6 cyfr)</strong></label>
+                        <input type="text" 
+                               name="blik_code" 
+                               class="form-control form-control-lg text-center" 
+                               placeholder="000000"
+                               inputmode="numeric"
+                               pattern="[0-9]{6}"
+                               maxlength="6"
+                               required
+                               autofocus>
+                        <small class="text-muted d-block mt-2">Otwórz aplikację Twojego banku i skopiuj kod BLIK</small>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            ✓ Potwierdzam i płacę {{ final_price }} zł
+                        </button>
+                        <a href="{% url 'cart_view' %}" class="btn btn-secondary">
+                            ← Wróć do koszyka
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Podsumowanie Ceny -->
+    <div class="col-md-4">
+        <div class="card shadow-sm bg-light sticky-top" style="top: 20px;">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">💰 Podsumowanie</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-8">Subtotal:</div>
+                    <div class="col-4 text-end">{{ total_price }} zł</div>
+                </div>
+
+                {% if discount_amount > 0 %}
+                <div class="row mb-3 text-success">
+                    <div class="col-8"><strong>Rabat:</strong></div>
+                    <div class="col-4 text-end"><strong>- {{ discount_amount }} zł</strong></div>
+                </div>
+                {% if applied_discount %}
+                <div class="alert alert-success small mb-3">
+                    <code>{{ applied_discount.code }}</code> - 
+                    {% if applied_discount.discount_type == 'percent' %}
+                        {{ applied_discount.discount_value }}% rabatu
+                    {% else %}
+                        {{ applied_discount.discount_value }} zł rabatu
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endif %}
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-8">
+                        <h5 class="mb-0">Do zapłaty:</h5>
+                    </div>
+                    <div class="col-4 text-end">
+                        <h4 class="text-success mb-0">{{ final_price }} zł</h4>
+                    </div>
+                </div>
+
+                <hr class="my-3">
+
+                <div class="alert alert-warning small" role="alert">
+                    <strong>ℹ️ Informacja:</strong> Po wpisaniu kodu BLIK zamówienie zostanie potwierdzone, a produkt zostanie zmniejszony ze stanu magazynowego.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

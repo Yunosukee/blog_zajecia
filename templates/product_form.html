@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Edytuj - {{ form.instance.name }}
+    {% else %}
+        Dodaj Nowy Produkt
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title mb-4">
+                    {% if form.instance.pk %}
+                        ✏️ Edytuj Produkt
+                    {% else %}
+                        ➕ Dodaj Nowy Produkt
+                    {% endif %}
+                </h1>
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Błędy formularza:</strong>
+                    {% for error in form.non_field_errors %}
+                        <p class="mb-0">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" class="needs-validation">
+                    {% csrf_token %}
+                    
+                    <!-- Nazwa Produktu -->
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">
+                            <strong>Nazwa Produktu *</strong>
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <div class="alert alert-danger small mt-1" role="alert">
+                            {% for error in form.name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Wpisz nazwę produktu (max 255 znaków)</small>
+                    </div>
+
+                    <!-- Opis -->
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">
+                            <strong>Opis Produktu *</strong>
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                        <div class="alert alert-danger small mt-1" role="alert">
+                            {% for error in form.description.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Opisz dokładnie cechy produktu</small>
+                    </div>
+
+                    <!-- Zdjęcie -->
+                    <div class="mb-3">
+                        <label for="{{ form.image.id_for_label }}" class="form-label">
+                            <strong>Zdjęcie Produktu *</strong>
+                        </label>
+                        {{ form.image }}
+                        {% if form.instance.image %}
+                        <div class="mt-2">
+                            <small class="text-muted">Obecne zdjęcie:</small><br>
+                            <img src="{{ form.instance.image.url }}" style="max-width: 150px; border-radius: 8px;">
+                        </div>
+                        {% endif %}
+                        {% if form.image.errors %}
+                        <div class="alert alert-danger small mt-1" role="alert">
+                            {% for error in form.image.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Wgram zdjęcie produktu (JPG, PNG, etc.)</small>
+                    </div>
+
+                    <!-- Cena -->
+                    <div class="mb-3">
+                        <label for="{{ form.price.id_for_label }}" class="form-label">
+                            <strong>Cena (zł) *</strong>
+                        </label>
+                        <div class="input-group">
+                            {{ form.price }}
+                            <span class="input-group-text">zł</span>
+                        </div>
+                        {% if form.price.errors %}
+                        <div class="alert alert-danger small mt-1" role="alert">
+                            {% for error in form.price.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Podaj cenę produktu (np. 99.99)</small>
+                    </div>
+
+                    <!-- Stan Magazynowy -->
+                    <div class="mb-3">
+                        <label for="{{ form.stock.id_for_label }}" class="form-label">
+                            <strong>Stan Magazynowy (szt.) *</strong>
+                        </label>
+                        {{ form.stock }}
+                        {% if form.stock.errors %}
+                        <div class="alert alert-danger small mt-1" role="alert">
+                            {% for error in form.stock.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Liczba dostępnych produktów w magazynie</small>
+                    </div>
+
+                    <!-- Kategoria -->
+                    <div class="mb-3">
+                        <label for="{{ form.category.id_for_label }}" class="form-label">
+                            <strong>Kategoria</strong>
+                        </label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                        <div class="alert alert-danger small mt-1" role="alert">
+                            {% for error in form.category.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Wybierz kategorię produktu (opcjonalnie)</small>
+                    </div>
+
+                    <!-- Przyciski -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.instance.pk %}
+                                💾 Zapisz Zmiany
+                            {% else %}
+                                ➕ Dodaj Produkt
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'product_list' %}" class="btn btn-secondary">← Anuluj</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    textarea {
+        min-height: 150px !important;
+    }
+</style>
+{% endblock %}

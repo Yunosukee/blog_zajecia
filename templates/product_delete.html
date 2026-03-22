@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuń - {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-body">
+                <h1 class="card-title mb-4 text-danger">🗑️ Potwierdzenie Usunięcia</h1>
+                
+                <div class="alert alert-warning" role="alert">
+                    <strong>Uwaga!</strong> Tej operacji nie można cofnąć!
+                </div>
+
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="img-fluid mb-3" alt="{{ product.name }}" style="max-height: 200px; border-radius: 8px;">
+                        {% endif %}
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-muted">{{ product.short_description }}</p>
+                        <small class="text-secondary">
+                            <strong>ID:</strong> #{{ product.pk }}<br>
+                            <strong>Dodano:</strong> {{ product.created_at|date:"d.m.Y H:i" }}
+                        </small>
+                    </div>
+                </div>
+
+                <p class="text-muted mb-4">Czy na pewno chcesz usunąć ten produkt? Wszystkie dane zostaną bezpowrotnie usunięte.</p>
+
+                <form method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        🗑️ Tak, usuń produkt
+                    </button>
+                    <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">
+                        ← Anuluj
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

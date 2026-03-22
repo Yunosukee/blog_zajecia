@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Szybka edycja - {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">⚡ Szybka edycja: {{ product.name }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'quick_edit_product' product.pk %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Cena (zł)</strong></label>
+                        <div class="input-group">
+                            <input type="number" name="price" value="{{ product.price }}" step="0.01" min="0" class="form-control form-control-lg" required>
+                            <span class="input-group-text">zł</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Stan magazynowy</strong></label>
+                        <input type="number" name="stock" value="{{ product.stock }}" min="0" class="form-control form-control-lg" required>
+                        <small class="text-muted">Liczba dostępnych produktów</small>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            💾 Zapisz zmiany
+                        </button>
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">
+                            ← Anuluj
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-muted">
+                <small>
+                    <strong>Edytowny produkt:</strong> {{ product.name }}<br>
+                    <strong>ID:</strong> #{{ product.pk }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
