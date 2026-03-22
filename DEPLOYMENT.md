@@ -34,7 +34,7 @@ W konsoli PythonAnywhere:
 ### 4a. Klonuj kod
 
 ```bash
-git clone https://github.com/TWOJ_LOGIN/sklep.git
+git clone https://github.com/Yunosukee/blog_zajecia.git
 cd sklep/blog_zajecia
 ```
 
@@ -92,10 +92,10 @@ application = get_wsgi_application()
 W sekcji **"Static files"** w Web App Settings:
 
 **URL**: `/static/`
-**Directory**: `/home/TWOJ_LOGIN/sklep/blog_zajecia/staticfiles`
+**Directory**: `/home/Yunosuke/sklep/blog_zajecia/staticfiles`
 
 **URL**: `/media/`
-**Directory**: `/home/TWOJ_LOGIN/sklep/blog_zajecia/media`
+**Directory**: `/home/Yunosuke/sklep/blog_zajecia/media`
 
 ## Krok 7: Reload Web App
 

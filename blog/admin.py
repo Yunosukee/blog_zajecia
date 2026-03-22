@@ -23,7 +23,8 @@ class DiscountCodeAdmin(admin.ModelAdmin):
     )
     
     def get_discount_display(self, obj):
-        return f"{obj.discount_value}{'%' if obj.discount_type == 'percent' else 'z\u0142'}"
+        symbol = '%' if obj.discount_type == 'percent' else 'zł'
+        return f"{obj.discount_value}{symbol}"
     get_discount_display.short_description = "Rabat"
 
 
